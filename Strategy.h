@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <time.h>
+#include "Const.h"
 
 // The following ifdef block is the standard way of creating macros which make exporting 
 // from a DLL simpler. All files within this DLL are compiled with the STRATEGY_EXPORTS
@@ -19,7 +20,7 @@
 const long PLAYERS_PER_SIDE = 5;
 
 #define Distancia(x,y,xf,yf) ( sqrt((xf-x)*(xf-x) + (yf-y)*(yf-y)) )
-const double PI = 3.1415923;
+//const double PI = 3.1415923;
 #define RAD2DEG (180.0/PI)
 #define DEG2RAD (PI/180.0)
 #define Rad2Deg(a) ((double)a * RAD2DEG)

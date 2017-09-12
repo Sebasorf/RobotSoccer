@@ -25,17 +25,17 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 #define ATENUAR 0.5
 
 // gameState
-const long PLAY = 0;	// Partido
-const long FREE_BALL = 1;
-const long PLACE_KICK = 2;
-const long PENALTY_KICK = 3;
-const long FREE_KICK = 4;
-const long GOAL_KICK = 5;
+//const long PLAY = 0;	// Partido
+//const long FREE_BALL = 1;
+//const long PLACE_KICK = 2;
+//const long PENALTY_KICK = 3;
+//const long FREE_KICK = 4;
+//const long GOAL_KICK = 5;
 
 // whosBall
-const long ANYONES_BALL = 0;
-const long BLUE_BALL = 1;
-const long YELLOW_BALL = 2;
+//const long ANYONES_BALL = 0;
+//const long BLUE_BALL = 1;
+//const long YELLOW_BALL = 2;
 
 // global variables -- Useful field positions ... maybe???
 const double FTOP = 77.2392;
