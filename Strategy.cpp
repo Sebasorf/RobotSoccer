@@ -1,15 +1,8 @@
-// Strategy.cpp : Defines the entry point for the DLL application.
-//
-
 #include "stdafx.h"
 #include "Strategy.h"
-
 #include <math.h>
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
-                       LPVOID lpReserved
-					 )
+BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
     switch (ul_reason_for_call)
 	{
@@ -19,33 +12,12 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 		case DLL_PROCESS_DETACH:
 			break;
     }
-    return TRUE;
+	return TRUE;
 }
 
 #define ATENUAR 0.5
 
-// gameState
-//const long PLAY = 0;	// Partido
-//const long FREE_BALL = 1;
-//const long PLACE_KICK = 2;
-//const long PENALTY_KICK = 3;
-//const long FREE_KICK = 4;
-//const long GOAL_KICK = 5;
 
-// whosBall
-//const long ANYONES_BALL = 0;
-//const long BLUE_BALL = 1;
-//const long YELLOW_BALL = 2;
-
-// global variables -- Useful field positions ... maybe???
-const double FTOP = 77.2392;
-const double FBOT = 6.3730;
-const double GTOPY = 49.6801;
-const double GBOTY = 33.9320;
-const double GRIGHT = 97.3632;
-const double GLEFT = 2.8748;
-const double FRIGHTX = 93.4259;
-const double FLEFTX = 6.8118;
 
 #define MaxVel	125
 
@@ -54,6 +26,17 @@ void PlayNormal(Environment *env );
 void Arquero( Robot *robot, Environment *env );
 void Jugador( Robot *robot, Environment *env, bool masCerca );
 
+
+// Velocidad de la pelota
+double Vel_Ball(Environment *env){
+	double Y2 = env->currentBall.pos.y;
+	double X2 = env->currentBall.pos.x;
+	double X1 = env->lastBall.pos.x;
+	double Y1 = env->lastBall.pos.y;
+	double Distancia = Distancia_2Pts(X1 ,X2, Y1, Y2);
+	double Vel_Pel = fabs(Distancia / 0.01);
+	return Vel_Pel;
+}
 
 extern "C" STRATEGY_API void Create ( Environment *env )
 {	
@@ -250,7 +233,7 @@ void Arquero( Robot *robot, Environment *env )
 		{
 			if (robot->pos.y < yball)
 			{
-				if (robot->pos.y > GTOPY)
+				if (robot->pos.y > ARCO_LINEA_SUPERIOR)
 				{
 					robot->velocityLeft = 0;
 					robot->velocityRight = 0;
@@ -271,7 +254,7 @@ void Arquero( Robot *robot, Environment *env )
 			}
 			else
 			{
-				if (robot->pos.y < GBOTY)
+				if (robot->pos.y < ARCO_LINEA_INFERIOR)
 				{
 					robot->velocityLeft = 0;
 					robot->velocityRight = 0;
@@ -320,14 +303,14 @@ void Jugador( Robot *robot, Environment *env, bool masCerca )
 	{
 		x = env->predictedBall.pos.x;
 		y = env->predictedBall.pos.y;
-		if ( y > FTOP - 2.5 ) 
-			 y = FTOP - 2.5;
-		if ( y < FBOT + 2.5 ) 
-			 y = FBOT + 2.5;
-		if ( x > FRIGHTX - 3 ) 
-			 x = FRIGHTX - 3;
-		if ( x < FLEFTX + 3 ) 
-			 x = FLEFTX + 3;
+		if ( y > LIMITE_SUPERIOR_CAMPO - 2.5 ) 
+			 y = LIMITE_SUPERIOR_CAMPO - 2.5;
+		if ( y < LIMITE_INFERIOR_CAMPO + 2.5 ) 
+			 y = LIMITE_INFERIOR_CAMPO + 2.5;
+		if ( x > LIMITE_DERECHO_CAMPO - 3 ) 
+			 x = LIMITE_DERECHO_CAMPO - 3;
+		if ( x < LIMITE_IZQUIERDO_CAMPO + 3 ) 
+			 x = LIMITE_IZQUIERDO_CAMPO + 3;
 
 		xo = robot->pos.x;
 		yo = robot->pos.y;
@@ -370,5 +353,5 @@ void Jugador( Robot *robot, Environment *env, bool masCerca )
 
 	robot->velocityLeft = vl;
 	robot->velocityRight = vr;
-
 }
+

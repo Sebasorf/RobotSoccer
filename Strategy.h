@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "Const.h"
+#include "Util.h"
 
 // The following ifdef block is the standard way of creating macros which make exporting 
 // from a DLL simpler. All files within this DLL are compiled with the STRATEGY_EXPORTS
@@ -25,6 +26,7 @@ const long PLAYERS_PER_SIDE = 5;
 #define DEG2RAD (PI/180.0)
 #define Rad2Deg(a) ((double)a * RAD2DEG)
 #define Deg2Rad(a) ((double)a * DEG2RAD)
+
 
 typedef struct
 {
@@ -71,6 +73,8 @@ typedef struct
 	char *display;
 
 } Environment;
+
+double Vel_Ball(Environment *env);
 
 typedef void (*MyStrategyProc)(Environment*);
 
