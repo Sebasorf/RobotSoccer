@@ -2,6 +2,7 @@
 //==================================================================
 #include "stdafx.h"
 #include "Strategy.h"
+#include "Util.h"
 
 //********************** Macros **********************
 //====================================================
@@ -18,13 +19,13 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	return TRUE;
 }
 
-//********************** User Functions **********************
-//============================================================
+//********************** User Functions Definitions **********************
+//========================================================================
 extern "C" STRATEGY_API void Create ( Environment *env ){}
 
 extern "C" STRATEGY_API void Destroy ( Environment *env ){}
 
-// Estrategia que se va a ejecutar dependiendo del caso
+// Estrategia que se va a ejecutar dependiendo del caso. Aca es donde hay que codear la logica de todo (seria tipo un main)
 extern "C" STRATEGY_API void Strategy ( Environment *env )
 {
 	PredictBall ( env );

@@ -1,11 +1,11 @@
+//********************** Libraries / Includes **********************
+//==================================================================
 #include "stdafx.h"
 #include "Util.h"
 
-#include <math.h>
-#include <fstream.h>
-
-#include "Const.h"
-
+//********************** User Functions Definitions **********************
+//========================================================================
+// Devuelve el ángulo a girar por un jugador para queda mirando a la posición xf yf
 double CalcularAnguloAGirar2(double x0,double y0, double xf, double yf, double rr) 
 {
 	double dAnguloEntre2Puntos = CalcularAngulo2Pts(x0, y0, xf, yf);
@@ -17,6 +17,7 @@ double CalcularAnguloAGirar2(double x0,double y0, double xf, double yf, double r
 	return dAnguloAGirar;
 }
 
+// Devuelve el angulo a partir de un punto inicial a uno final
 double CalcularAngulo2Pts(double xo, double yo, double xf, double yf)
 {
 	double dx, dy, alfa, constAngle = 0;
@@ -53,45 +54,7 @@ double CalcularAngulo2Pts(double xo, double yo, double xf, double yf)
 	return alfa;
 }
 
-// Deveulve el ángulo en grados pasado como parámetro en radianes.
-double Deg2Rad(double dAngGrados)
-{
-	return dAngGrados * (PI / 180.0);
-}
-
-// Deveulve el ángulo en radianes pasado como parámetro en grados.
-double Rad2Deg(double dAngRad)
-{
-	return dAngRad * (180.0 / PI);
-}
-
-// Calcula la distancia entre dos puntos.
-double Distancia(double x0,double y0,double xf,double yf) 
-{
-	double dist_x = xf - x0;;
-	double dist_y = yf - y0;
-	return sqrt(((dist_x) * (dist_x)) + ((dist_y) * (dist_y)));	
-}
-
-// Devuelve el menor de los dos valores pasados como parámetros.
-double Menor(double a, double b)
-{
-	return a < b ? a : b;
-}
-
-// Devuelve el mayor de los dos valores pasados como parámetros.
-double Mayor(double a, double b)
-{
-	return a > b ? a : b;
-}
-
-// Devuelve 0 si el número pasado como parámetro es 0, -1 si es negativo, y 1 si es positivo.
-int Signo(double n)
-{
-	return (int)(n == 0 ? 0 : (n / fabs(n)));
-}
-
-// Calcula el ángulo que hay entre dos puntos.
+// Calcula el ángulo que hay entre dos puntos. Version 2
 double CalcularAngulo2Pts2(double x0, double y0, double xf, double yf) 
 {
 	double dAngulo;
@@ -123,6 +86,59 @@ double CalcularAngulo2Pts2(double x0, double y0, double xf, double yf)
 			dAngulo = dAngGrados;
 	}
 	return dAngulo;
+}
+
+// Deveulve el ángulo en grados pasado como parámetro en radianes.
+double Deg2Rad(double dAngGrados)
+{
+	return dAngGrados * (PI / 180.0);
+}
+
+// Deveulve el ángulo en radianes pasado como parámetro en grados.
+double Rad2Deg(double dAngRad)
+{
+	return dAngRad * (180.0 / PI);
+}
+
+// Deveulve el ángulo en grados pasado como parámetro en radianes.Version 2
+double Radianes_Grados(double Angulo_R){
+	double grados = fabs (Angulo_R * 180 / PI);	
+	return grados;
+}
+
+// Calcula la distancia entre dos puntos.
+double Distancia(double x0,double y0,double xf,double yf) 
+{
+	double dist_x = xf - x0;;
+	double dist_y = yf - y0;
+	return sqrt(((dist_x) * (dist_x)) + ((dist_y) * (dist_y)));	
+}
+
+// Calcula la distancia entre dos puntos. Version 2
+double Distancia_2Pts(double X1 ,double X2,double Y1, double Y2){
+	double Op, Ady;
+	Op = fabs(Y1 - Y2);
+	Ady = fabs(X1 - X2);
+	double Distancia = (sqrt((Ady * Ady) + (Op * Op)));	
+	return Distancia;		
+}
+
+// Devuelve el menor de los dos valores pasados como parámetros.
+double Menor(double a, double b)
+{
+	return a < b ? a : b;
+}
+
+// Devuelve el mayor de los dos valores pasados como parámetros.
+double Mayor(double a, double b)
+{
+	return a > b ? a : b;
+}
+
+// Devuelve 0 si el número pasado como parámetro es 0, -1 si es negativo, y 1 si es positivo.
+int Signo(double n)
+{
+	return (int)(n == 0 ? 0 : (n / fabs(n)));
 }
 
 // Devuelve el número de zona en donde se encuentra el punto pasado como parámetro.
@@ -288,25 +304,14 @@ int Zona (double x, double y)
 		return 0;
 }
 
-double Distancia_2Pts(double X1 ,double X2,double Y1, double Y2){
-	double Op, Ady;
-	Op = fabs(Y1 - Y2);
-	Ady = fabs(X1 - X2);
-	double Distancia = (sqrt((Ady * Ady) + (Op * Op)));	
-	return Distancia;		
-}
-
+// Falta entender que hace
 double Angulo_2Pts(double Distancia, double Op){
 	fabs(Op);
 	double Angulo = asin(fabs(Op / Distancia));	
 	return Angulo;
 }
 
-double Radianes_Grados(double Angulo_R){
-	double grados = fabs (Angulo_R * 180 / PI);	
-	return grados;
-}
-
+//Falta entender que hace
 double Angulo_girar(double Angulo, double Op, double Ady, double rotation){
 	if ((Ady > 0) && (Op > 0)){
 		Angulo = Angulo;
@@ -332,15 +337,16 @@ double Angulo_girar(double Angulo, double Op, double Ady, double rotation){
 	return Angulo;
 }
 
+// Falta entender que hace
 double NormalizarAngulo(double angulo)
 {
 	while (angulo >  360) angulo -= 360;
 	while (angulo < -360) angulo += 360;
 	if (angulo < 0) angulo += 360;
-
 	return angulo;
 }
 
+// Falta entender que hace
 int Velocidad(double Distancia){
 	int Velocidad;
 	if (Distancia > 13) {
@@ -369,4 +375,3 @@ int Velocidad(double Distancia){
 	}
 	return Velocidad;
 }
-
