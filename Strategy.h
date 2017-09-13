@@ -1,65 +1,69 @@
 #ifndef Strategy_H
 #define Strategy_H
 
+//********************** Libraries / Includes **********************
+//==================================================================
 #include <stdio.h>
 #include <time.h>
 #include "Const.h"
 #include "Util.h"
+#include <math.h>
 
-// The following ifdef block is the standard way of creating macros which make exporting 
-// from a DLL simpler. All files within this DLL are compiled with the STRATEGY_EXPORTS
-// symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
-// STRATEGY_API functions as being imported from a DLL, wheras this DLL sees symbols
-// defined with this macro as being exported.
+//********************** Macros **********************
+//====================================================
 #ifdef STRATEGY_EXPORTS
 #define STRATEGY_API __declspec(dllexport)
 #else
 #define STRATEGY_API __declspec(dllimport)
 #endif
-
-const long PLAYERS_PER_SIDE = 5;
-
 #define Distancia(x,y,xf,yf) ( sqrt((xf-x)*(xf-x) + (yf-y)*(yf-y)) )
-//const double PI = 3.1415923;
 #define RAD2DEG (180.0/PI)
 #define DEG2RAD (PI/180.0)
 #define Rad2Deg(a) ((double)a * RAD2DEG)
 #define Deg2Rad(a) ((double)a * DEG2RAD)
+#define ATENUAR 0.5
+#define MaxVel	125
 
+//********************** Global Variables **********************
+//==============================================================
+const long PLAYERS_PER_SIDE = 5;
+char myMessage[200];
 
+//********************** Structs Definition **********************
+//================================================================
 typedef struct
 {
 	double x, y, z;
-} Vector3D;
+} Vector3D; //Defino una estructura Vector 3D
 
 typedef struct
 {
 	long left, right, top, bottom;
-} Bounds;
+} Bounds; //Defino una estructura Limites con los 4 puntos de un rectangulo
 
 typedef struct
 {
 	Vector3D pos;
 	double rotation;
 	double velocityLeft, velocityRight;
-} Robot;
+} Robot; //Defino una estructura Robot, que tiene un Vector de posicion, un angulo Rotacion que dice a donde esta apuntando el
+         //robot en radianes, y la velocidad de ambas ruedas.
 
 typedef struct
 {
 	Vector3D pos;
 	double rotation;
-} OpponentRobot;
+} OpponentRobot; //Defino una estructura RobotOponente en donde defino la posicion y hacia a donde esta mirando en radianes
 
 typedef struct
 {
 	Vector3D pos;
-} Ball;
+} Ball; //Defino una estructura Pelota que solo tiene un Vector de la posicion actual
 
 typedef struct
 {
 	Vector3D mid, sup, inf, tope;
-} Goal;
+} Goal; //Defino una estructura Arco, que tiene los límites del arco.
 
 typedef struct
 {
@@ -71,19 +75,23 @@ typedef struct
 	OpponentRobot opponent[PLAYERS_PER_SIDE];
 	void *userData;
 	char *display;
-
-} Environment;
-
-double Vel_Ball(Environment *env);
+} Environment; //Defino una estructura Ambiente, que tiene un vector de 5 Robots, tiene 3 Pelotas (con ultima posicion,
+               //posicion actual, y posicion predicha), tipo del juego, quién tiene la pelota, un vector de 5 RobotOponentes,
+               //datos del usuario y datos de la pantalla
 
 typedef void (*MyStrategyProc)(Environment*);
 
-char myMessage[200]; //big enough???
-
-extern "C" STRATEGY_API void Create ( Environment *env ); // implement this function to allocate user data and assign to Environment->userData
-extern "C" STRATEGY_API void Strategy ( Environment *env );
-extern "C" STRATEGY_API void Destroy ( Environment *env ); // implement this function to free user data created in  Create (Environment*)
-
+//********************** User Function Prototypes **********************
+//======================================================================
+extern "C" STRATEGY_API void Create ( Environment *env );
+extern "C" STRATEGY_API void Destroy ( Environment *env );
+extern "C" STRATEGY_API void Strategy ( Environment *env ); 
+void PredictBall ( Environment *env );
+void PlayNormal(Environment *env );
+void Arquero( Robot *robot, Environment *env );
+void Jugador( Robot *robot, Environment *env, bool masCerca );
+double Vel_Ball(Environment *env);
+double ObtenerAngulo(double x0, double y0, double xf, double yf);
 
 #endif // Strategy_H
 
