@@ -97,7 +97,7 @@ void PredictBall ( Environment *env )
 }
 
 //Jugada principal en el caso de FreeBall
-void PlayNormal( Environment *env )
+/*void PlayNormal2(Environment *env)
 {
 	int masCerca,i;
 	double distMin,dist;
@@ -117,6 +117,16 @@ void PlayNormal( Environment *env )
 	Jugador( &env->home[2], env, (masCerca == 2) );
 	Jugador( &env->home[3], env, (masCerca == 3) );
 	Jugador( &env->home[4], env, (masCerca == 4) );
+}*/
+
+void PlayNormal(Environment *env)
+{
+	double vl, vr;
+	vl = MaxVel;
+    vr = MaxVel;
+	Robot *robot= &env->home[3];
+	robot->velocityLeft = vl;
+	robot->velocityRight = vr;
 }
 
 // Funcion principal de los movimientos del arquero
