@@ -9,21 +9,14 @@
 
 #include <string.h>
 #include <stdio.h>
+#include "Const.h"
+#include "Util.h"
 
+#define ATENUAR 0.5
+#define MaxVel	125
+//********************** Global Variables **********************
+//==============================================================
 const long PLAYERS_PER_SIDE = 5;
-
-// gameState
-const long FREE_BALL = 1;
-const long PLACE_KICK = 2;
-const long PENALTY_KICK = 3;
-const long FREE_KICK = 4;
-const long GOAL_KICK = 5;
-
-// whosBall
-const long ANYONES_BALL = 0;
-const long BLUE_BALL = 1;
-const long YELLOW_BALL = 2;
-
 // global variables -- Useful field positions ... maybe???
 const double FTOP = 77.2392;
 const double FBOT = 6.3730;
@@ -34,6 +27,8 @@ const double GLEFT = 2.8748;
 const double FRIGHTX = 93.4259;
 const double FLEFTX = 6.8118;
 
+//********************** Structs Definition **********************
+//================================================================
 typedef struct
 {
 	double x, y, z;
@@ -73,13 +68,11 @@ typedef struct
 	void *userData;
 } Environment;
 
+//********************** User Function Prototypes **********************
+//======================================================================
 typedef void (*MyStrategyProc)(Environment*);
-
-/* MUST BE IMPLEMENTED */
 extern "C" STRATEGY_API void Create ( Environment *env ); // implement this function to allocate user data and assign to Environment->userData
 extern "C" STRATEGY_API void Strategy ( Environment *env );
 extern "C" STRATEGY_API void Destroy ( Environment *env ); // implement this function to free user data created in  Create (Environment*)
-
-
 
 #endif // Strategy_H
