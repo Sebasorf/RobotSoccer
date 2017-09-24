@@ -88,6 +88,7 @@ extern "C" STRATEGY_API void Destroy ( Environment *env );
 extern "C" STRATEGY_API void Strategy ( Environment *env ); 
 void PredictBall ( Environment *env );
 void PlayNormal(Environment *env );
+void MoverJugadorHaciaPelota(Robot *robot, Environment *env);
 void Arquero( Robot *robot, Environment *env );
 void Jugador( Robot *robot, Environment *env, bool masCerca );
 double Vel_Ball(Environment *env);

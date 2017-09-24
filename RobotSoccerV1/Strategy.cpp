@@ -31,55 +31,31 @@ extern "C" STRATEGY_API void Strategy ( Environment *env )
 	PredictBall ( env );
 	switch (env->gameState)
 	{
-	case PLAY:
-		PlayNormal(env);
-		break;
-	case FREE_BALL:
-		PlayNormal(env);
-		break;
-	case PLACE_KICK:
-		PlayNormal(env);
-		break;
+	case PLAY: PlayNormal(env); break;
+	case FREE_BALL: PlayNormal(env); break;
+	case PLACE_KICK: PlayNormal(env); break;
 	case PENALTY_KICK:
 		switch (env->whosBall)
 		{
-		case ANYONES_BALL:
-			PlayNormal(env);
-			break;
-		case BLUE_BALL:
-			PlayNormal(env);
-			break;
-		case YELLOW_BALL:
-			PlayNormal(env);
-			break;
+		case ANYONES_BALL: PlayNormal(env); break;
+		case BLUE_BALL: PlayNormal(env); break;
+		case YELLOW_BALL: PlayNormal(env); break;
 		}
 		break;
 	case FREE_KICK:
 		switch (env->whosBall)
 		{
-		case ANYONES_BALL:
-			PlayNormal(env);
-			break;
-		case BLUE_BALL:
-			PlayNormal(env);
-			break;
-		case YELLOW_BALL:
-			PlayNormal(env);
-			break;
+		case ANYONES_BALL: PlayNormal(env); break;
+		case BLUE_BALL: PlayNormal(env); break;
+		case YELLOW_BALL: PlayNormal(env); break;
 		}
 		break;
 	case GOAL_KICK:
 		switch (env->whosBall)
 		{
-		case ANYONES_BALL:
-			PlayNormal(env);
-			break;
-		case BLUE_BALL:
-			PlayNormal(env);
-			break;
-		case YELLOW_BALL:
-			PlayNormal(env);
-			break;
+		case ANYONES_BALL: PlayNormal(env); break;
+		case BLUE_BALL: PlayNormal(env); break;
+		case YELLOW_BALL: PlayNormal(env); break;
 		}
 		break;
 	}	
@@ -113,20 +89,35 @@ void PredictBall ( Environment *env )
 		}
 	}
 	Arquero( &env->home[0], env );
-	Jugador( &env->home[1], env, (masCerca == 1) );
-	Jugador( &env->home[2], env, (masCerca == 2) );
-	Jugador( &env->home[3], env, (masCerca == 3) );
-	Jugador( &env->home[4], env, (masCerca == 4) );
+	Jugador( &env->home[1], env, (masCerca == 1) ); //Defensor izquierdo
+	Jugador( &env->home[2], env, (masCerca == 2) ); //Defensor derecho
+	Jugador( &env->home[3], env, (masCerca == 3) ); //Delantero derecho
+	Jugador( &env->home[4], env, (masCerca == 4) ); //Delantero izquierdo
 }*/
 
 void PlayNormal(Environment *env)
 {
 	double vl, vr;
+	double limite_delanteros_x = 60;
 	vl = MaxVel;
     vr = MaxVel;
-	Robot *robot= &env->home[3];
-	robot->velocityLeft = vl;
-	robot->velocityRight = vr;
+	Ball *pelota = &env->lastBall;
+	Robot *arquero = &env->home[0];
+	Robot *defensorIzquierdo = &env->home[1];
+	Robot *defensorDerecho = &env->home[2];
+	Robot *delanteroDerecho= &env->home[3];
+	Robot *delanteroIzquierdo = &env->home[4];
+	//Dado el robot delanteroDerecho, quieror ir a limite_delanteros_x
+	if(pelota->pos.x >= limite_delanteros_x)
+	{
+		delanteroDerecho->velocityLeft=vl;
+		delanteroDerecho->velocityRight=vr;
+	}
+	else
+	{
+		delanteroDerecho->velocityLeft=-127;
+		delanteroDerecho->velocityRight=-127;
+	}
 }
 
 // Funcion principal de los movimientos del arquero
@@ -206,6 +197,11 @@ void Arquero( Robot *robot, Environment *env )
 			robot->velocityRight = -(r+90) * ATENUAR;
 		}
 	}
+}
+
+void MoverJugadorHaciaPelota(Robot *robot, Environment *env)
+{
+
 }
 
 // Funcion principal que define el movimiento de un jugador
