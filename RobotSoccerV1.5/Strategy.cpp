@@ -26,8 +26,8 @@ char myMessage[200];
 //********************** User Function Prototypes **********************
 //======================================================================
 void FreeNormalPlay(Environment *env);
-bool PelotaEnZonaDeDelanteros(Ball *currentBall)
-bool PelotaEnZonaDeDefensores(Ball *currentBall)
+bool PelotaEnZonaDeDelanteros(Ball *currentBall);
+bool PelotaEnZonaDeDefensores(Ball *currentBall);
 
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
@@ -57,28 +57,29 @@ extern "C" STRATEGY_API void Destroy ( Environment *env )
 
 extern "C" STRATEGY_API void Strategy ( Environment *env )
 {
+	PredictBall(env);
 	int testInt = 100;
 	int k;
 	switch (env->gameState)
 	{
 		case 0: // default
-			FreeNormalPlay(env);
-			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
-			//MoonAttack ( &env->home [4], env );
-			//Goalie1 ( &env->home [0], env );
+			//FreeNormalPlay(env);
+			MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
+			MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
+			MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
+			MoonAttack ( &env->home [4], env );
+			Goalie1 ( &env->home [0], env );
 			break;
 		case FREE_BALL:
-			FreeNormalPlay(env);
+			//FreeNormalPlay(env);
 			// Follow opponent guy
-			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
+			MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
+			MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
+			MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
 			//// attack
-			//MoonAttack ( &env->home [4], env );
+			MoonAttack ( &env->home [4], env );
 			//// Goal keeper
-			//Goalie1 ( &env->home [0], env );
+			Goalie1 ( &env->home [0], env );
 			//// by moon at 24/03/2002
 			//// below code will not work.... never try....
 			////	env->home[0].pos.x = 50;
@@ -132,35 +133,34 @@ void FreeNormalPlay(Environment *env)
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	if(PelotaEnZonaDeDelanteros(pelota))
+	
+	/*if(PelotaEnZonaDeDelanteros(pelota))
 	{
-		MoonAttack(Robot delanteroDerecho, Environment *env);
-		MoonAttack(Robot delanteroIzquierdo, Environment *env);
+		MoonAttack(delanteroDerecho, env);
+		MoonAttack(delanteroIzquierdo, env);
 	}
 	if(PelotaEnZonaDeDefensores(pelota))
 	{
-		MoonAttack(Robot defensorDerecho, Environment *env);
-		MoonAttack(Robot defensorIzquierdo, Environment *env);
+		MoonAttack(defensorDerecho, env);
+		MoonAttack(defensorIzquierdo, env);
 	}
-
+	*/
+	Attack2(defensorDerecho, env);
+	Attack2(defensorIzquierdo, env);
+	Attack2(delanteroDerecho, env);
+	Attack2(delanteroIzquierdo, env);
 }
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
 {
-	// Para el equipo azul: el limite de delanteros va de 65 hasta 0
-	// Siendo 0 el limite de la pared del amarillo, y 65 el limite
-	// para no chocar con la defensa azul. Es decir
-	// 65 limite derecho de zona, 0 limite izquierdo de zona
+	// Para el equipo azul: el limite de delanteros va de 65 hasta 0. Siendo 0 el limite de la pared del amarillo, y 65 el limite para no chocar con la defensa azul. Es decir 65 limite derecho de zona, 0 limite izquierdo de zona
 	double limite_delanteros_x = 65;
 	return (currentBall->pos.x<=limite_delanteros_x) ? true:false;
 }
 
 bool PelotaEnZonaDeDefensores(Ball *currentBall)
 {
-	// Para el equipo azul: el limite de defensores va de 40 en x hasta
-	// el valor infinito, siendo 40 el limite yendo para el equipo
-	// amarillo. Es decir, 40 limite izquierdo de zona, 
-	// infinito limite derecho de zona
+	// Para el equipo azul: el limite de defensores va de 40 en x hasta el valor infinito, siendo 40 el limite yendo para el equipo amarillo. Es decir, 40 limite izquierdo de zona, infinito limite derecho de zona
 	double limite_defensores_x = 40;
 	return (currentBall->pos.x>=limite_defensores_x) ? true:false;
 }
@@ -169,7 +169,6 @@ void MoonAttack ( Robot *robot, Environment *env )
 {
 	//Velocity (robot, 127, 127);
 	//Angle (robot, 45);
-	PredictBall ( env );
 	Position(robot, env->predictedBall.pos.x, env->predictedBall.pos.y);
 	// Position(robot, 0.0, 0.0);
 }
