@@ -28,7 +28,7 @@ char myMessage[200];
 void FreeNormalPlay(Environment *env);
 bool PelotaEnZonaDeDelanteros(Ball *currentBall);
 bool PelotaEnZonaDeDefensores(Ball *currentBall);
-void MoverJugadorAUnPunto(Robot *jugador, Environment *env, double posicionXdestino, double posicionYdestino);
+void MoverJugadorAUnPunto(Robot *jugador, double posicionXdestino, double posicionYdestino);
 double NormalizarAnguloEnGrados(double grados);
 
 void PredictBall ( Environment *env );
@@ -135,10 +135,14 @@ void FreeNormalPlay(Environment *env)
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	Attack2(defensorDerecho, env);
-	Attack2(defensorIzquierdo, env);
-	Attack2(delanteroDerecho, env);
-	Attack2(delanteroIzquierdo, env);
+	//Attack2(defensorDerecho, env);
+	//Attack2(defensorIzquierdo, env);
+	//Attack2(delanteroDerecho, env);
+	//Attack2(delanteroIzquierdo, env);
+	MoverJugadorAUnPunto(defensorIzquierdo, pelota->pos.x, pelota->pos.y);
+	MoverJugadorAUnPunto(defensorDerecho, pelota->pos.x, pelota->pos.y);
+	MoverJugadorAUnPunto(delanteroDerecho, pelota->pos.x, pelota->pos.y);
+	MoverJugadorAUnPunto(delanteroIzquierdo, pelota->pos.x, pelota->pos.y);
 }
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
@@ -155,7 +159,7 @@ bool PelotaEnZonaDeDefensores(Ball *currentBall)
 	return (currentBall->pos.x>=limite_defensores_x) ? true:false;
 }
 
-void MoverJugadorAUnPunto(Robot *jugador, Environment *env, double posicionXdestino, double posicionYdestino)
+void MoverJugadorAUnPunto(Robot *jugador, double posicionXdestino, double posicionYdestino)
 {
 	double posicionXjugador = jugador->pos.x;
 	double posicionYjugador = jugador->pos.y;
@@ -163,8 +167,9 @@ void MoverJugadorAUnPunto(Robot *jugador, Environment *env, double posicionXdest
 	double angulo_actual = jugador->rotation;
 	//2- Obtener angulo de la posicion del punto a mirar (inicial es 0°) 
 	double angulo_a_mirar = CalcularAngulo2Pts(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino);
-	//3- 
-
+	angulo_a_mirar = NormalizarAnguloEnGrados(angulo_a_mirar);
+	//3- Mover el robot de acuerdo al angulo
+	jugador->rotation = angulo_a_mirar;
 }
 
 //Funcion que transforma grados (ej1: 190 grados a -170 , ej2: 270 grados a -90)
