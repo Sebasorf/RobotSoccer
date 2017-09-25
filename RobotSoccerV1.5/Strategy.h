@@ -14,6 +14,7 @@
 
 #define ATENUAR 0.5
 #define MaxVel	125
+
 //********************** Global Variables **********************
 //==============================================================
 const long PLAYERS_PER_SIDE = 5;

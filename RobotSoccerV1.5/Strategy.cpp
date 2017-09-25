@@ -25,6 +25,7 @@ char myMessage[200];
 
 //********************** User Function Prototypes **********************
 //======================================================================
+void FreeNormalPlay(Environment *env);
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
 void NearBound2 ( Robot *robot, double vl, double vr, Environment *env );
@@ -59,26 +60,28 @@ extern "C" STRATEGY_API void Strategy ( Environment *env )
 	switch (env->gameState)
 	{
 		case 0: // default
-			MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
-			MoonAttack ( &env->home [4], env );
-			Goalie1 ( &env->home [0], env );
+			FreeNormalPlay(env);
+			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
+			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
+			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
+			//MoonAttack ( &env->home [4], env );
+			//Goalie1 ( &env->home [0], env );
 			break;
 		case FREE_BALL:
+			FreeNormalPlay(env);
 			// Follow opponent guy
-			MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
-			// attack
-			MoonAttack ( &env->home [4], env );
-			// Goal keeper
-			Goalie1 ( &env->home [0], env );
-			// by moon at 24/03/2002
-			// below code will not work.... never try....
-			//	env->home[0].pos.x = 50;
-			//	env->home[0].pos.y = 0;
-			//	env->home[0].rotation = 20.0;
+			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
+			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
+			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
+			//// attack
+			//MoonAttack ( &env->home [4], env );
+			//// Goal keeper
+			//Goalie1 ( &env->home [0], env );
+			//// by moon at 24/03/2002
+			//// below code will not work.... never try....
+			////	env->home[0].pos.x = 50;
+			////	env->home[0].pos.y = 0;
+			////	env->home[0].rotation = 20.0;
 			break;
 		case PLACE_KICK:
 			MoonAttack ( &env->home [2], env );
@@ -115,7 +118,32 @@ extern "C" STRATEGY_API void Strategy ( Environment *env )
 }
 
 //********************** User Functions Definitions **********************
-//=======================================================================
+//========================================================================
+void FreeNormalPlay(Environment *env)
+{
+	double vl, vr;
+	double limite_delanteros_x = 60;
+	vl = MaxVel;
+    vr = MaxVel;
+	Ball *pelota = &env->lastBall;
+	Robot *arquero = &env->home[0];
+	Robot *defensorIzquierdo = &env->home[1];
+	Robot *defensorDerecho = &env->home[2];
+	Robot *delanteroDerecho= &env->home[3];
+	Robot *delanteroIzquierdo = &env->home[4];
+	//Dado el robot delanteroDerecho, quieror ir a limite_delanteros_x
+	if(pelota->pos.x >= limite_delanteros_x)
+	{
+		delanteroDerecho->velocityLeft=vl;
+		delanteroDerecho->velocityRight=vr;
+	}
+	else
+	{
+		delanteroDerecho->velocityLeft=-127;
+		delanteroDerecho->velocityRight=-127;
+	}
+}
+
 void MoonAttack ( Robot *robot, Environment *env )
 {
 	//Velocity (robot, 127, 127);
