@@ -130,7 +130,8 @@ void FreeNormalPlay(Environment *env)
 	double vl, vr;
 	vl = MaxVel;
     vr = MaxVel;
-	Ball *pelota = &env->currentBall;
+	Ball *pelotaActual = &env->currentBall;
+	Ball *pelotaFutura = &env->predictedBall;
 	Robot *arquero = &env->home[0];
 	Robot *defensorIzquierdo = &env->home[1];
 	Robot *defensorDerecho = &env->home[2];
@@ -140,10 +141,20 @@ void FreeNormalPlay(Environment *env)
 	//Attack2(defensorIzquierdo, env);
 	//Attack2(delanteroDerecho, env);
 	//Attack2(delanteroIzquierdo, env);
-	MoverJugadorAUnPunto(defensorIzquierdo, pelota->pos.x, pelota->pos.y);
-	MoverJugadorAUnPunto(defensorDerecho, pelota->pos.x, pelota->pos.y);
+	//MoverJugadorAUnPunto(defensorIzquierdo, pelota->pos.x, pelota->pos.y);
+	//MoverJugadorAUnPunto(defensorDerecho, pelota->pos.x, pelota->pos.y);
 	//MoverJugadorAUnPunto(delanteroDerecho, pelota->pos.x, pelota->pos.y);
 	//MoverJugadorAUnPunto(delanteroIzquierdo, pelota->pos.x, pelota->pos.y);
+	if( PelotaEnZonaDeDelanteros(pelotaActual) )
+	{
+		Position(delanteroIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		Position(delanteroIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
+	}
+	else
+	{
+		Position(defensorIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		Position(defensorDerecho, pelotaFutura->pos.x, pelotaFutura->pos.y);
+	}
 }
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
