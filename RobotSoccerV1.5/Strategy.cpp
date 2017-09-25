@@ -61,63 +61,47 @@ extern "C" STRATEGY_API void Strategy ( Environment *env )
 {
 	PredictBall(env);
 	int testInt = 100;
-	int k;
 	switch (env->gameState)
 	{
 		case 0: // default
 			FreeNormalPlay(env);
-			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
-			//MoonAttack ( &env->home [4], env );
 			//Goalie1 ( &env->home [0], env );
 			break;
 		case FREE_BALL:
 			FreeNormalPlay(env);
-			// Follow opponent guy
-			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
-			//// attack
-			//MoonAttack ( &env->home [4], env );
-			//// Goal keeper
 			//Goalie1 ( &env->home [0], env );
-			//// by moon at 24/03/2002
-			//// below code will not work.... never try....
-			////	env->home[0].pos.x = 50;
-			////	env->home[0].pos.y = 0;
-			////	env->home[0].rotation = 20.0;
 			break;
 		case PLACE_KICK:
-			MoonAttack ( &env->home [2], env );
+			FreeNormalPlay(env);
 			break;			
 		case PENALTY_KICK:
 			switch (env->whosBall)
 			{
 			case ANYONES_BALL:
-				MoonAttack ( &env->home [1], env );
+				FreeNormalPlay(env);;
 				break;
 			case BLUE_BALL:
-				MoonAttack ( &env->home [4], env );
+				FreeNormalPlay(env);
 				break;
 			case YELLOW_BALL:
-				MoonAttack ( &env->home [0], env );
+				FreeNormalPlay(env);
 				break;
 			}
 			break;
 		case FREE_KICK:
-			FILE * debugfile; 
+			FreeNormalPlay(env);
+			/*FILE * debugfile; 
+			int k = 100;
 			debugfile = fopen("debugfile.txt","a"); 
 			for (k=0;k<=4;k++) 
 				fprintf(debugfile, "robot: %d x: %f y: %f z: %f \n",
 					k, env->opponent[k].pos.x, env->opponent[k].pos.y, 
 					env->opponent[k].pos.z); 
 			
-			fclose(debugfile); 
-			MoonAttack ( &env->home [0], env );
+			fclose(debugfile); */
 			break;
 		case GOAL_KICK:
-			MoonAttack ( &env->home [0], env );
+			FreeNormalPlay(env);
 			break;
   }
 }
@@ -136,19 +120,33 @@ void FreeNormalPlay(Environment *env)
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	if( PelotaEnZonaDeDelanteros(pelotaActual) )
+	Goalie1 (arquero, env);
+
+	if( PelotaEnZonaDeDelanteros(pelotaFutura) )
 	{
 		Despejar(delanteroIzquierdo, pelotaFutura);
 		Despejar(delanteroDerecho, pelotaFutura);
-		//Position(delanteroIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
-		//Position(delanteroDerecho, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		if( defensorIzquierdo->pos.x < 40)
+		{
+			Position(defensorIzquierdo, 72, 27);
+		}
+		if( defensorDerecho->pos.x < 40)
+		{
+			Position(defensorDerecho, 72, 55);
+		}
 	}
-	else
+	if( PelotaEnZonaDeDefensores(pelotaFutura) )
 	{
 		Despejar(defensorIzquierdo, pelotaFutura);
 		Despejar(defensorDerecho, pelotaFutura);
-		//Position(defensorIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
-		//Position(defensorDerecho, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		if( delanteroIzquierdo->pos.x > 65)
+		{
+			Position(delanteroIzquierdo, 35, 27);
+		}		
+		if( delanteroDerecho->pos.x > 65 )
+		{
+			Position(delanteroDerecho, 35, 55);
+		}
 	}
 }
 
@@ -177,11 +175,11 @@ void Despejar(Robot *jugador, Ball *currentBall)
 			//Si el jugador se encuentra en una posicion mayor en Y, voy por arriba
 			if( jugador->pos.y > currentBall->pos.y)
 			{
-				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y + 5);
+				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y + 5);
 			}
 			else
 			{
-				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y);
+				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y);
 			}
 		}
 		else
@@ -189,11 +187,11 @@ void Despejar(Robot *jugador, Ball *currentBall)
 			//Se podría sacar esta condicion con IF y else
 			if( jugador->pos.y > currentBall->pos.y)
 			{
-				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y + 5);
+				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y + 5);
 			}
 			else
 			{
-				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y);
+				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y);
 			}
 		}
 	}
