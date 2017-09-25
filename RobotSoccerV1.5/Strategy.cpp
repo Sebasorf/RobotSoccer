@@ -51,6 +51,7 @@ extern "C" STRATEGY_API void Create ( Environment *env )
 {
 }
 
+
 extern "C" STRATEGY_API void Destroy ( Environment *env )
 {
 }
