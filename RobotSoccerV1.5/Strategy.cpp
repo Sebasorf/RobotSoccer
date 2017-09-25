@@ -28,6 +28,8 @@ char myMessage[200];
 void FreeNormalPlay(Environment *env);
 bool PelotaEnZonaDeDelanteros(Ball *currentBall);
 bool PelotaEnZonaDeDefensores(Ball *currentBall);
+void MoverJugadorAUnPunto(Robot *jugador, Environment *env, double posicionXdestino, double posicionYdestino);
+double NormalizarAnguloEnGrados(double grados);
 
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
@@ -63,23 +65,23 @@ extern "C" STRATEGY_API void Strategy ( Environment *env )
 	switch (env->gameState)
 	{
 		case 0: // default
-			//FreeNormalPlay(env);
-			MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
-			MoonAttack ( &env->home [4], env );
-			Goalie1 ( &env->home [0], env );
+			FreeNormalPlay(env);
+			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
+			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
+			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
+			//MoonAttack ( &env->home [4], env );
+			//Goalie1 ( &env->home [0], env );
 			break;
 		case FREE_BALL:
-			//FreeNormalPlay(env);
+			FreeNormalPlay(env);
 			// Follow opponent guy
-			MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
-			MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
-			MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
+			//MoonFollowOpponent ( &env->home [1], &env->opponent [2] );
+			//MoonFollowOpponent ( &env->home [2], &env->opponent [3] );
+			//MoonFollowOpponent ( &env->home [3], &env->opponent [4] );
 			//// attack
-			MoonAttack ( &env->home [4], env );
+			//MoonAttack ( &env->home [4], env );
 			//// Goal keeper
-			Goalie1 ( &env->home [0], env );
+			//Goalie1 ( &env->home [0], env );
 			//// by moon at 24/03/2002
 			//// below code will not work.... never try....
 			////	env->home[0].pos.x = 50;
@@ -133,18 +135,6 @@ void FreeNormalPlay(Environment *env)
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	
-	/*if(PelotaEnZonaDeDelanteros(pelota))
-	{
-		MoonAttack(delanteroDerecho, env);
-		MoonAttack(delanteroIzquierdo, env);
-	}
-	if(PelotaEnZonaDeDefensores(pelota))
-	{
-		MoonAttack(defensorDerecho, env);
-		MoonAttack(defensorIzquierdo, env);
-	}
-	*/
 	Attack2(defensorDerecho, env);
 	Attack2(defensorIzquierdo, env);
 	Attack2(delanteroDerecho, env);
@@ -165,6 +155,28 @@ bool PelotaEnZonaDeDefensores(Ball *currentBall)
 	return (currentBall->pos.x>=limite_defensores_x) ? true:false;
 }
 
+void MoverJugadorAUnPunto(Robot *jugador, Environment *env, double posicionXdestino, double posicionYdestino)
+{
+	double posicionXjugador = jugador->pos.x;
+	double posicionYjugador = jugador->pos.y;
+	//1- Debo obtener el angulo a donde esta mirando el robot
+	double angulo_actual = jugador->rotation;
+	//2- Obtener angulo de la posicion del punto a mirar (inicial es 0°) 
+	double angulo_a_mirar = CalcularAngulo2Pts(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino);
+	//3- 
+
+}
+
+//Funcion que transforma grados (ej1: 190 grados a -170 , ej2: 270 grados a -90)
+double NormalizarAnguloEnGrados(double grados)
+{
+	return (grados>180) ? (grados-360):grados ;
+}
+
+
+//****************************************************************************************
+//************************ Funciones que vienen de caja **********************************
+//****************************************************************************************
 void MoonAttack ( Robot *robot, Environment *env )
 {
 	//Velocity (robot, 127, 127);
