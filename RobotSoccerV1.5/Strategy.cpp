@@ -28,9 +28,8 @@ char myMessage[200];
 void FreeNormalPlay(Environment *env);
 bool PelotaEnZonaDeDelanteros(Ball *currentBall);
 bool PelotaEnZonaDeDefensores(Ball *currentBall);
-void MoverJugadorAUnPunto(Robot *jugador, double posicionXdestino, double posicionYdestino);
-double NormalizarAnguloEnGrados(double grados);
-bool MirandoHaciaLaPelota(double gradoObjetivo, double gradoInicio);
+void Despejar(Robot *jugador, Ball *currentBall);
+bool PelotaEnPosicionYriesgosa(double posicionJugador, Ball *currentBall);
 
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
@@ -137,23 +136,19 @@ void FreeNormalPlay(Environment *env)
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	//Attack2(defensorDerecho, env);
-	//Attack2(defensorIzquierdo, env);
-	//Attack2(delanteroDerecho, env);
-	//Attack2(delanteroIzquierdo, env);
-	//MoverJugadorAUnPunto(defensorIzquierdo, pelota->pos.x, pelota->pos.y);
-	//MoverJugadorAUnPunto(defensorDerecho, pelota->pos.x, pelota->pos.y);
-	//MoverJugadorAUnPunto(delanteroDerecho, pelota->pos.x, pelota->pos.y);
-	//MoverJugadorAUnPunto(delanteroIzquierdo, pelota->pos.x, pelota->pos.y);
 	if( PelotaEnZonaDeDelanteros(pelotaActual) )
 	{
-		Position(delanteroIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
-		Position(delanteroIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		Despejar(delanteroIzquierdo, pelotaFutura);
+		Despejar(delanteroDerecho, pelotaFutura);
+		//Position(delanteroIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		//Position(delanteroDerecho, pelotaFutura->pos.x, pelotaFutura->pos.y);
 	}
 	else
 	{
-		Position(defensorIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
-		Position(defensorDerecho, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		Despejar(defensorIzquierdo, pelotaFutura);
+		Despejar(defensorDerecho, pelotaFutura);
+		//Position(defensorIzquierdo, pelotaFutura->pos.x, pelotaFutura->pos.y);
+		//Position(defensorDerecho, pelotaFutura->pos.x, pelotaFutura->pos.y);
 	}
 }
 
@@ -171,35 +166,51 @@ bool PelotaEnZonaDeDefensores(Ball *currentBall)
 	return (currentBall->pos.x>=limite_defensores_x) ? true:false;
 }
 
-void MoverJugadorAUnPunto(Robot *jugador, double posicionXdestino, double posicionYdestino)
+void Despejar(Robot *jugador, Ball *currentBall)
 {
-	double posicionXjugador = jugador->pos.x;
-	double posicionYjugador = jugador->pos.y;
-	double rotacionRobot = jugador->rotation;
-	//1- Debo obtener el angulo a donde esta mirando el robot
-	double angulo_actual = jugador->rotation;
-	//2- Obtener angulo de la posicion del punto a mirar (inicial es 0°) 
-	//double angulo_a_mirar = CalcularAngulo2Pts(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino);
-	//angulo_a_mirar = NormalizarAnguloEnGrados(angulo_a_mirar);
-	double angulo_a_mirar = CalcularAnguloAGirar2(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino, rotacionRobot);
-	//3- Mover el robot de acuerdo al angulo
-	if(MirandoHaciaLaPelota(angulo_a_mirar, jugador->rotation)){
-		jugador->velocityLeft = 15;
-		jugador->velocityRight = -15;
+	//Si, la posicion de los jugadores apunta a su propio arco (para gol en contra)
+	if(currentBall->pos.x > jugador->pos.x)
+	{
+		//Si la pelota se encuentra a una distancia Y respecto al jugador, riesgosa por gol en contra
+		if( PelotaEnPosicionYriesgosa( jugador->pos.y, currentBall ) )
+		{
+			//Si el jugador se encuentra en una posicion mayor en Y, voy por arriba
+			if( jugador->pos.y > currentBall->pos.y)
+			{
+				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y + 5);
+			}
+			else
+			{
+				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y);
+			}
+		}
+		else
+		{
+			//Se podría sacar esta condicion con IF y else
+			if( jugador->pos.y > currentBall->pos.y)
+			{
+				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y + 5);
+			}
+			else
+			{
+				Position(jugador, currentBall->pos.x + 2, currentBall->pos.y);
+			}
+		}
 	}
+	else
+	{
+		// Quiere decir que los jugadores apuntan la pelota hacia el arco enemigo
+		Position(jugador, currentBall->pos.x, currentBall->pos.y);
+	}	
+
 }
 
-//Funcion que transforma grados (ej1: 190 grados a -170 , ej2: 270 grados a -90)
-double NormalizarAnguloEnGrados(double grados)
+bool PelotaEnPosicionYriesgosa(double posicionJugador, Ball *currentBall)
 {
-	return (grados>180) ? (grados-360):grados ;
-}
-
-bool MirandoHaciaLaPelota(double gradoObjetivo, double gradoInicio)
-{
-	double rango_min = gradoObjetivo-10;
-	double rango_max = gradoObjetivo+10;
-	return (gradoInicio>rango_min && gradoInicio<rango_max) ? true:false;
+	//Define si el robot esta en la misma posicion Y para no hacer gol en contra
+	double posicionYaceptable_min = currentBall->pos.y - 6;
+	double posicionYaceptable_max = currentBall->pos.y + 6;
+	return (posicionJugador > posicionYaceptable_min && posicionJugador < posicionYaceptable_max) ? true:false;
 }
 
 
