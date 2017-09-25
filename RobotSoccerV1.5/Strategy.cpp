@@ -26,6 +26,9 @@ char myMessage[200];
 //********************** User Function Prototypes **********************
 //======================================================================
 void FreeNormalPlay(Environment *env);
+bool PelotaEnZonaDeDelanteros(Ball *currentBall)
+bool PelotaEnZonaDeDefensores(Ball *currentBall)
+
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
 void NearBound2 ( Robot *robot, double vl, double vr, Environment *env );
@@ -122,26 +125,45 @@ extern "C" STRATEGY_API void Strategy ( Environment *env )
 void FreeNormalPlay(Environment *env)
 {
 	double vl, vr;
-	double limite_delanteros_x = 60;
 	vl = MaxVel;
     vr = MaxVel;
-	Ball *pelota = &env->lastBall;
+	Ball *pelota = &env->currentBall;
 	Robot *arquero = &env->home[0];
 	Robot *defensorIzquierdo = &env->home[1];
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	//Dado el robot delanteroDerecho, quieror ir a limite_delanteros_x
-	if(pelota->pos.x >= limite_delanteros_x)
+	if(PelotaEnZonaDeDelanteros(pelota))
 	{
-		delanteroDerecho->velocityLeft=vl;
-		delanteroDerecho->velocityRight=vr;
+		MoonAttack(Robot delanteroDerecho, Environment *env);
+		MoonAttack(Robot delanteroIzquierdo, Environment *env);
 	}
-	else
+	if(PelotaEnZonaDeDefensores(pelota))
 	{
-		delanteroDerecho->velocityLeft=-127;
-		delanteroDerecho->velocityRight=-127;
+		MoonAttack(Robot defensorDerecho, Environment *env);
+		MoonAttack(Robot defensorIzquierdo, Environment *env);
 	}
+
+}
+
+bool PelotaEnZonaDeDelanteros(Ball *currentBall)
+{
+	// Para el equipo azul: el limite de delanteros va de 65 hasta 0
+	// Siendo 0 el limite de la pared del amarillo, y 65 el limite
+	// para no chocar con la defensa azul. Es decir
+	// 65 limite derecho de zona, 0 limite izquierdo de zona
+	double limite_delanteros_x = 65;
+	return (currentBall->pos.x<=limite_delanteros_x) ? true:false;
+}
+
+bool PelotaEnZonaDeDefensores(Ball *currentBall)
+{
+	// Para el equipo azul: el limite de defensores va de 40 en x hasta
+	// el valor infinito, siendo 40 el limite yendo para el equipo
+	// amarillo. Es decir, 40 limite izquierdo de zona, 
+	// infinito limite derecho de zona
+	double limite_defensores_x = 40;
+	return (currentBall->pos.x>=limite_defensores_x) ? true:false;
 }
 
 void MoonAttack ( Robot *robot, Environment *env )
