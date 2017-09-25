@@ -30,6 +30,7 @@ bool PelotaEnZonaDeDelanteros(Ball *currentBall);
 bool PelotaEnZonaDeDefensores(Ball *currentBall);
 void MoverJugadorAUnPunto(Robot *jugador, double posicionXdestino, double posicionYdestino);
 double NormalizarAnguloEnGrados(double grados);
+bool MirandoHaciaLaPelota(double gradoObjetivo, double gradoInicio);
 
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
@@ -141,8 +142,8 @@ void FreeNormalPlay(Environment *env)
 	//Attack2(delanteroIzquierdo, env);
 	MoverJugadorAUnPunto(defensorIzquierdo, pelota->pos.x, pelota->pos.y);
 	MoverJugadorAUnPunto(defensorDerecho, pelota->pos.x, pelota->pos.y);
-	MoverJugadorAUnPunto(delanteroDerecho, pelota->pos.x, pelota->pos.y);
-	MoverJugadorAUnPunto(delanteroIzquierdo, pelota->pos.x, pelota->pos.y);
+	//MoverJugadorAUnPunto(delanteroDerecho, pelota->pos.x, pelota->pos.y);
+	//MoverJugadorAUnPunto(delanteroIzquierdo, pelota->pos.x, pelota->pos.y);
 }
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
@@ -163,19 +164,31 @@ void MoverJugadorAUnPunto(Robot *jugador, double posicionXdestino, double posici
 {
 	double posicionXjugador = jugador->pos.x;
 	double posicionYjugador = jugador->pos.y;
+	double rotacionRobot = jugador->rotation;
 	//1- Debo obtener el angulo a donde esta mirando el robot
 	double angulo_actual = jugador->rotation;
 	//2- Obtener angulo de la posicion del punto a mirar (inicial es 0°) 
-	double angulo_a_mirar = CalcularAngulo2Pts(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino);
-	angulo_a_mirar = NormalizarAnguloEnGrados(angulo_a_mirar);
+	//double angulo_a_mirar = CalcularAngulo2Pts(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino);
+	//angulo_a_mirar = NormalizarAnguloEnGrados(angulo_a_mirar);
+	double angulo_a_mirar = CalcularAnguloAGirar2(posicionXjugador, posicionYjugador, posicionXdestino, posicionYdestino, rotacionRobot);
 	//3- Mover el robot de acuerdo al angulo
-	jugador->rotation = angulo_a_mirar;
+	if(MirandoHaciaLaPelota(angulo_a_mirar, jugador->rotation)){
+		jugador->velocityLeft = 15;
+		jugador->velocityRight = -15;
+	}
 }
 
 //Funcion que transforma grados (ej1: 190 grados a -170 , ej2: 270 grados a -90)
 double NormalizarAnguloEnGrados(double grados)
 {
 	return (grados>180) ? (grados-360):grados ;
+}
+
+bool MirandoHaciaLaPelota(double gradoObjetivo, double gradoInicio)
+{
+	double rango_min = gradoObjetivo-10;
+	double rango_max = gradoObjetivo+10;
+	return (gradoInicio>rango_min && gradoInicio<rango_max) ? true:false;
 }
 
 
