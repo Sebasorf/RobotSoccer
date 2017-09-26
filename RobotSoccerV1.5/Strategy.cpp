@@ -30,6 +30,9 @@ bool PelotaEnZonaDeDelanteros(Ball *currentBall);
 bool PelotaEnZonaDeDefensores(Ball *currentBall);
 void Despejar(Robot *jugador, Ball *currentBall);
 bool PelotaEnPosicionYriesgosa(double posicionJugador, Ball *currentBall);
+void CentrarArquero(Robot *arquero, Ball *predictedBall);
+double CalcularDimensionesLineaArquero(Robot *arquero, Ball *predictedBall);
+
 
 void PredictBall ( Environment *env );
 void Goalie1 ( Robot *robot, Environment *env );
@@ -60,7 +63,6 @@ extern "C" STRATEGY_API void Destroy ( Environment *env )
 extern "C" STRATEGY_API void Strategy ( Environment *env )
 {
 	PredictBall(env);
-	int testInt = 100;
 	switch (env->gameState)
 	{
 		case 0: // default
@@ -120,8 +122,6 @@ void FreeNormalPlay(Environment *env)
 	Robot *defensorDerecho = &env->home[2];
 	Robot *delanteroDerecho= &env->home[3];
 	Robot *delanteroIzquierdo = &env->home[4];
-	Goalie1 (arquero, env);
-
 	if( PelotaEnZonaDeDelanteros(pelotaFutura) )
 	{
 		Despejar(delanteroIzquierdo, pelotaFutura);
@@ -142,6 +142,7 @@ void FreeNormalPlay(Environment *env)
 			Position(delanteroDerecho, 35, 55);
 		}
 	}
+	CentrarArquero(arquero, pelotaFutura);
 }
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
@@ -204,6 +205,33 @@ bool PelotaEnPosicionYriesgosa(double posicionJugador, Ball *currentBall)
 	double posicionYaceptable_max = currentBall->pos.y + 6;
 	return (posicionJugador > posicionYaceptable_min && posicionJugador < posicionYaceptable_max) ? true:false;
 }
+
+void CentrarArquero(Robot *arquero, Ball *predictedBall)
+{
+	double posicion_y = CalcularDimensionesLineaArquero( arquero, predictedBall );
+	Position(arquero, 90.4642, posicion_y);
+}
+
+double CalcularDimensionesLineaArquero(Robot *arquero, Ball *predictedBall)
+{
+	double limite_superior_pelota = 75;
+	double limite_inferior_pelota = 8;
+	double limite_superior_arquero = 50;
+	double limite_inferior_arquero = 34.4874;
+	double distancia_recorrido_pelota = limite_superior_pelota - limite_inferior_pelota;
+	double distancia_recorrido_arquero = limite_superior_arquero - limite_inferior_arquero;
+	// Tengo que hacer una regla de 3 simple para calcular como se va a ir moviendo
+	// el arquero en todo su recorrido, en relacion al movimiento de la pelota
+	// - a--->b
+	// - c--->x
+	// 
+	// - (b*c)/a
+	// 
+	// - 67----------->15.5126
+	// - pos_pelota--->x
+	return (((predictedBall->pos.y*distancia_recorrido_arquero)/distancia_recorrido_pelota) + limite_inferior_arquero);
+}
+
 
 
 //****************************************************************************************
