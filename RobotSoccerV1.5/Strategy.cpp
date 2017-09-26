@@ -126,12 +126,9 @@ void FreeNormalPlay(Environment *env)
 	{
 		Despejar(delanteroIzquierdo, pelotaFutura);
 		Despejar(delanteroDerecho, pelotaFutura);
-		if( defensorIzquierdo->pos.x < 40)
+		if( pelotaFutura->pos.x < 40)
 		{
 			Position(defensorIzquierdo, 72, 27);
-		}
-		if( defensorDerecho->pos.x < 40)
-		{
 			Position(defensorDerecho, 72, 55);
 		}
 	}
@@ -139,12 +136,9 @@ void FreeNormalPlay(Environment *env)
 	{
 		Despejar(defensorIzquierdo, pelotaFutura);
 		Despejar(defensorDerecho, pelotaFutura);
-		if( delanteroIzquierdo->pos.x > 65)
+		if( pelotaFutura->pos.x > 65)
 		{
 			Position(delanteroIzquierdo, 35, 27);
-		}		
-		if( delanteroDerecho->pos.x > 65 )
-		{
 			Position(delanteroDerecho, 35, 55);
 		}
 	}
