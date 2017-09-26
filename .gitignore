@@ -1,3 +1,6 @@
 /RobotSoccerV1.5/Debug/RemoveStrategies.bat
-/RobotSoccerV1.5/Debug/StrategyToRed.bat
+/RobotSoccerV1.5/Debug/StrategyToYellow.bat
 /RobotSoccerV1.5/Debug/StrategyToBlue.bat
+/RobotSoccerV1.5-yellow/Debug/RemoveStrategies.bat
+/RobotSoccerV1.5-yellow/Debug/StrategyToYellow.bat
+/RobotSoccerV1.5-yellow/Debug/StrategyToBlue.bat
