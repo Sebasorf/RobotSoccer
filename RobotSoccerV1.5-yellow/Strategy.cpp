@@ -115,20 +115,20 @@ void FreeNormalPlay(Environment *env)
 	{
 		Despejar(delanteroIzquierdo, pelotaFutura);
 		Despejar(delanteroDerecho, pelotaFutura);
-		if( pelotaFutura->pos.x < 40)
+		if( pelotaFutura->pos.x > 60) //CambiadoAmarillo
 		{
-			Position(defensorIzquierdo, 72, 27);
-			Position(defensorDerecho, 72, 55);
+			Position(defensorIzquierdo, 28, 55); //CambiadoAmarillo
+			Position(defensorDerecho, 28, 27); //CambiadoAmarillo
 		}
 	}
 	if( PelotaEnZonaDeDefensores(pelotaFutura) )
 	{
 		Despejar(defensorIzquierdo, pelotaFutura);
 		Despejar(defensorDerecho, pelotaFutura);
-		if( pelotaFutura->pos.x > 65)
+		if( pelotaFutura->pos.x < 35) //CambiadoAmarillo
 		{
-			Position(delanteroIzquierdo, 35, 27);
-			Position(delanteroDerecho, 35, 55);
+			Position(delanteroIzquierdo, 65, 27); //CambiadoAmarillo
+			Position(delanteroDerecho, 65, 55); //CambiadoAmarillo
 		}
 	}
 	CentrarArquero(arquero, pelotaFutura);
@@ -136,22 +136,22 @@ void FreeNormalPlay(Environment *env)
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
 {
-	// Para el equipo azul: el limite de delanteros va de 65 hasta 0. Siendo 0 el limite de la pared del amarillo, y 65 el limite para no chocar con la defensa azul. Es decir 65 limite derecho de zona, 0 limite izquierdo de zona
-	double limite_delanteros_x = 65;
-	return (currentBall->pos.x<=limite_delanteros_x) ? true:false;
+	// Para el equipo amarillo: el limite de delanteros va de 35 hasta infinito. Infinito es hacia la derecha
+	double limite_delanteros_x = 35; //CambiadoAmarillo
+	return (currentBall->pos.x>=limite_delanteros_x) ? true:false; //CambiadoAmarillo
 }
 
 bool PelotaEnZonaDeDefensores(Ball *currentBall)
 {
 	// Para el equipo azul: el limite de defensores va de 40 en x hasta el valor infinito, siendo 40 el limite yendo para el equipo amarillo. Es decir, 40 limite izquierdo de zona, infinito limite derecho de zona
-	double limite_defensores_x = 40;
-	return (currentBall->pos.x>=limite_defensores_x) ? true:false;
+	double limite_defensores_x = 60; //CambiadoAmarillo
+	return (currentBall->pos.x<=limite_defensores_x) ? true:false; //CambiadoAmarillo
 }
 
 void Despejar(Robot *jugador, Ball *currentBall)
 {
 	//Si, la posicion de los jugadores apunta a su propio arco (para gol en contra)
-	if(currentBall->pos.x > jugador->pos.x)
+	if(currentBall->pos.x < jugador->pos.x)
 	{
 		//Si la pelota se encuentra a una distancia Y respecto al jugador, riesgosa por gol en contra
 		if( PelotaEnPosicionYriesgosa( jugador->pos.y, currentBall ) )
@@ -159,11 +159,11 @@ void Despejar(Robot *jugador, Ball *currentBall)
 			//Si el jugador se encuentra en una posicion mayor en Y, voy por arriba
 			if( jugador->pos.y > currentBall->pos.y)
 			{
-				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y + 5);
+				Position(jugador, currentBall->pos.x - 5, currentBall->pos.y + 5); //CambiadoAmarillo
 			}
 			else
 			{
-				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y);
+				Position(jugador, currentBall->pos.x - 5, currentBall->pos.y); //CambiadoAmarillo
 			}
 		}
 		else
@@ -171,11 +171,11 @@ void Despejar(Robot *jugador, Ball *currentBall)
 			//Se podría sacar esta condicion con IF y else
 			if( jugador->pos.y > currentBall->pos.y)
 			{
-				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y + 5);
+				Position(jugador, currentBall->pos.x - 5, currentBall->pos.y + 5); //CambiadoAmarillo
 			}
 			else
 			{
-				Position(jugador, currentBall->pos.x + 5, currentBall->pos.y);
+				Position(jugador, currentBall->pos.x - 5, currentBall->pos.y); //CambiadoAmarillo
 			}
 		}
 	}
@@ -198,7 +198,7 @@ bool PelotaEnPosicionYriesgosa(double posicionJugador, Ball *currentBall)
 void CentrarArquero(Robot *arquero, Ball *predictedBall)
 {
 	double posicion_y = CalcularDimensionesLineaArquero( arquero, predictedBall );
-	Position(arquero, 90.4642, posicion_y);
+	Position(arquero, 10.6691, posicion_y); //CambiadoAmarillo
 }
 
 double CalcularDimensionesLineaArquero(Robot *arquero, Ball *predictedBall)

@@ -99,7 +99,7 @@ SOURCE=.\Strategy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\RobotSoccerV1\Util.cpp
+SOURCE=.\Util.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"

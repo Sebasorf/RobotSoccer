@@ -5,7 +5,7 @@
 
 //********************** User Functions Definitions **********************
 //========================================================================
-// Devuelve el ángulo a girar por un jugador para queda mirando a la posición xf yf, rr robot rotacion
+// Devuelve el ángulo a girar por un jugador para queda mirando a la posición xf yf
 double CalcularAnguloAGirar2(double x0,double y0, double xf, double yf, double rr) 
 {
 	double dAnguloEntre2Puntos = CalcularAngulo2Pts(x0, y0, xf, yf);

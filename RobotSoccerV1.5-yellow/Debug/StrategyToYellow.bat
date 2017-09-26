@@ -1,0 +1,1 @@
+xcopy "D:\Personal\Escritorio\Sistemas Inteligentes\Simurosot\equipo-sebito\RobotSoccer\RobotSoccerV1.5-yellow\Debug\Strategy.dll" C:\Strategy\yellow\ /Y

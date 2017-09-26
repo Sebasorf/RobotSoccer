@@ -46,6 +46,15 @@ const double MITAD_DE_CANCHA_DERECHA_EN_X = 64.8633;
 const double MITAD_DE_CANCHA_IZQUIERDA_EN_X = 35.3357; 
 const double LATERAL_LINEA_SUPERIOR = 68.3317;
 const double LATERAL_LINEA_INFERIOR = 15.2805;
+// global variables -- Useful field positions ... maybe???
+//const double LIMITE_SUPERIOR_CAMPO = 77.2392;
+//const double LIMITE_INFERIOR_CAMPO = 6.3730;
+//const double ARCO_LINEA_SUPERIOR = 49.6801;
+//const double ARCO_LINEA_INFERIOR = 33.9320;
+//const double ARCO_LINEA_DE_ATRAS_DERECHA = 97.3632;
+//const double ARCO_LINEA_DE_ATRAS_IZQUIERDA = 2.8748;
+//const double LIMITE_DERECHO_CAMPO = 93.4259;
+//const double LIMITE_IZQUIERDO_CAMPO = 6.8118;
 
 // Lineas de Juego.
 const double LINEA_ARQUERO_AMARILLO = 9.7448;
