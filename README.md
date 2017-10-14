@@ -5,13 +5,10 @@ For running it, it is necesary to download Microsoft Visual c++ 6 and the code o
 - git clone https://github.com/Sebasorf/RobotSoccer.git
 or download it as .zip file.
 
-In RobotSoccer folder, you can open Strategy.dsw by right-clicking on it and choosing Microsoft Visual c++ 6. This will only work on Windows SO.
-This Strategy corresponds to blue team. The Strategy.dll should be load to blue strategy folder.
+In this Project, you can find two folders. One of them is the code for generating Strategy.dll for yellow team, and the other one contains code for generating Strategy.dll for blue team. 
 
-In RobotSoccer-yellow folder, you can open the same Strategy as before, with some constants and logic modified for applying to yellow team strategy. The Strategy.dll should be load to yellow strategy folder.
+In one RobotSoccer-coloured-team folder, you can open Strategy.dsw by right-clicking on it and choosing Microsoft Visual c++ 6. This will only work on Windows SO. You should build the .dll (it will be saved in project), and then put it in the Strategy folder of the team you want to use it. It's usually on C://Strategy folder.
 
-You must compile in proyect, the Strategy.cpp and will generate the Strategy.dll on debug folder.
-
-Then you can play by copying this .dll into SoccerSimulator install directory and opening it as c++ script.
+Finally, you must open it as c++ script in Simurosot Simulator.
 
 

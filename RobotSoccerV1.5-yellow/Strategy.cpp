@@ -28,6 +28,7 @@ char myMessage[200];
 void FreeNormalPlay(Environment *env);
 bool PelotaEnZonaDeDelanteros(Ball *currentBall);
 bool PelotaEnZonaDeDefensores(Ball *currentBall);
+bool PelotaEnZonaPeligrosaDeArquero(Ball *currentBall);
 void Despejar(Robot *jugador, Ball *currentBall);
 bool PelotaEnPosicionYriesgosa(double posicionJugador, Ball *currentBall);
 void CentrarArquero(Robot *arquero, Ball *predictedBall);
@@ -131,7 +132,14 @@ void FreeNormalPlay(Environment *env)
 			Position(delanteroDerecho, 65, 55); //CambiadoAmarillo
 		}
 	}
-	CentrarArquero(arquero, pelotaFutura);
+	if( PelotaEnZonaPeligrosaDeArquero(pelotaFutura) )
+	{
+		Despejar(arquero, pelotaFutura);
+	}
+	else
+	{
+		CentrarArquero(arquero, pelotaFutura);
+	}
 }
 
 bool PelotaEnZonaDeDelanteros(Ball *currentBall)
@@ -146,6 +154,17 @@ bool PelotaEnZonaDeDefensores(Ball *currentBall)
 	// Para el equipo azul: el limite de defensores va de 40 en x hasta el valor infinito, siendo 40 el limite yendo para el equipo amarillo. Es decir, 40 limite izquierdo de zona, infinito limite derecho de zona
 	double limite_defensores_x = 60; //CambiadoAmarillo
 	return (currentBall->pos.x<=limite_defensores_x) ? true:false; //CambiadoAmarillo
+}
+
+bool PelotaEnZonaPeligrosaDeArquero(Ball *currentBall)
+{
+	//Para el equipo azul: Limite inferior y superior en X va de xx:xx y limite inferior en Y va de xx:xx respectivamente
+	double limite_peligroso_superior_x = 21;
+	double limite_peligroso_inferior_x = 6;
+	double limite_peligroso_superior_y = 56;
+	double limite_peligroso_inferior_y = 26;
+	return (currentBall->pos.x>limite_peligroso_inferior_x && currentBall->pos.x<limite_peligroso_superior_x && currentBall->pos.y>limite_peligroso_inferior_y && currentBall->pos.y<limite_peligroso_superior_y) ? true:false;
+
 }
 
 void Despejar(Robot *jugador, Ball *currentBall)
